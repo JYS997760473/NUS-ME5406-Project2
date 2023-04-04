@@ -20,7 +20,7 @@ from utilities import *
 
 if __name__ == '__main__':
     start = time.perf_counter()
-    env_id = "BipedalWalkerHardcore-v3"
+    # env_id = "BipedalWalkerHardcore-v3"
     seed = 0
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -44,10 +44,10 @@ if __name__ == '__main__':
     rm_done = True
 
     train_envs = ts.env.DummyVectorEnv(
-        [lambda: Wrapper(gym.make(env_id), action_repeat=action_repeat, reward_scale=reward_scale, rm_done=rm_done) for
+        [lambda: Wrapper(env=env, action_repeat=action_repeat, reward_scale=reward_scale, rm_done=rm_done) for
          _ in range(num_envs)])
     test_envs = ts.env.DummyVectorEnv(
-        [lambda: Wrapper(gym.make(env_id), action_repeat=action_repeat, reward_scale=reward_scale, rm_done=rm_done) for
+        [lambda: Wrapper(env=env, action_repeat=action_repeat, reward_scale=reward_scale, rm_done=rm_done) for
          _ in range(num_envs)])
     train_envs.seed(seed)
     test_envs.seed(seed)
@@ -175,7 +175,7 @@ if __name__ == '__main__':
     for episode in range(num_episodes):
         # Video
         env = ts.env.DummyVectorEnv(
-            [lambda: Wrapper(gym.make(env_id), action_repeat=action_repeat, reward_scale=reward_scale, rm_done=rm_done)
+            [lambda: Wrapper(env=env, action_repeat=action_repeat, reward_scale=reward_scale, rm_done=rm_done)
              for _ in range(1)])
         policy.eval()
         collector = ts.data.Collector(policy, env, exploration_noise=False)
