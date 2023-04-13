@@ -10,6 +10,8 @@ import torch
 import numpy as np
 import gymnasium as gym
 from gymnasium import wrappers
+# import gym
+# from gym import wrappers
 import tianshou as ts
 from tianshou.policy import SACPolicy
 from tianshou.utils import TensorboardLogger
@@ -25,6 +27,7 @@ if __name__ == '__main__':
     np.random.seed(seed)
     torch.manual_seed(seed)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    print(f"cuda:{device}")
     load_pretrained_model = False
     model_log_dir, model_file, buffer_file = '', '', ''
 
@@ -35,7 +38,8 @@ if __name__ == '__main__':
     logger = TensorboardLogger(writer, train_interval=1, update_interval=1)
 
     # Environment
-    env = gym.make("BipedalWalker-v3", hardcore=True, render_mode="rgb_array")
+    # env = gym.make("BipedalWalker-v3", hardcore=True, render_mode="rgb_array")
+    env = gym.make(env_id)
     # env.seed(seed=seed)
     env.reset(seed=seed)
     num_envs = 5
@@ -44,10 +48,10 @@ if __name__ == '__main__':
     rm_done = True
 
     train_envs = ts.env.DummyVectorEnv(
-        [lambda: Wrapper(gym.make(env_id), action_repeat=action_repeat, reward_scale=reward_scale, rm_done=rm_done) for
+        [lambda: Wrapper(env=env, action_repeat=action_repeat, reward_scale=reward_scale, rm_done=rm_done) for
          _ in range(num_envs)])
     test_envs = ts.env.DummyVectorEnv(
-        [lambda: Wrapper(gym.make(env_id), action_repeat=action_repeat, reward_scale=reward_scale, rm_done=rm_done) for
+        [lambda: Wrapper(env=env, action_repeat=action_repeat, reward_scale=reward_scale, rm_done=rm_done) for
          _ in range(num_envs)])
     train_envs.seed(seed)
     test_envs.seed(seed)
@@ -114,26 +118,28 @@ if __name__ == '__main__':
 
             # Record agents performance in video with and without exploration noise
             for episode in range(num_episodes // 2):
-                # env = ts.env.DummyVectorEnv(
-                    # [lambda: wrappers.Monitor(
-                    #     env=Wrapper(gym.make(env_id), action_repeat=action_repeat, reward_scale=reward_scale,
-                    #                 rm_done=rm_done),
-                    #     directory=log_dir + '/videos/epoch_' + str(
-                    #         epoch) + '/video' + str(episode), force=False) for _ in range(1)])
-                policy.eval()
-                collector = ts.data.Collector(policy, env, exploration_noise=True)
-                collector.collect(n_episode=1, render=1 / 60)
-
-            for episode in range(num_episodes // 2, num_episodes):
+                print(f"episode:{episode}")
                 # env = ts.env.DummyVectorEnv(
                 #     [lambda: wrappers.Monitor(
                 #         env=Wrapper(gym.make(env_id), action_repeat=action_repeat, reward_scale=reward_scale,
                 #                     rm_done=rm_done),
                 #         directory=log_dir + '/videos/epoch_' + str(
                 #             epoch) + '/video' + str(episode), force=False) for _ in range(1)])
-                policy.eval()
-                collector = ts.data.Collector(policy, env, exploration_noise=False)
-                collector.collect(n_episode=1, render=1 / 60)
+                # policy.eval()
+                # collector = ts.data.Collector(policy, env, exploration_noise=True)
+                # collector.collect(n_episode=1, render=1 / 60)
+
+            for episode in range(num_episodes // 2, num_episodes):
+                print(f"episode:{episode}")
+                # env = ts.env.DummyVectorEnv(
+                #     [lambda: wrappers.Monitor(
+                #         env=Wrapper(gym.make(env_id), action_repeat=action_repeat, reward_scale=reward_scale,
+                #                     rm_done=rm_done),
+                #         directory=log_dir + '/videos/epoch_' + str(
+                #             epoch) + '/video' + str(episode), force=False) for _ in range(1)])
+                # policy.eval()
+                # collector = ts.data.Collector(policy, env, exploration_noise=False)
+                # collector.collect(n_episode=1, render=1 / 60)
 
         return custom_test_fn
 
@@ -175,7 +181,7 @@ if __name__ == '__main__':
     for episode in range(num_episodes):
         # Video
         env = ts.env.DummyVectorEnv(
-            [lambda: Wrapper(gym.make(env_id), action_repeat=action_repeat, reward_scale=reward_scale, rm_done=rm_done)
+            [lambda: Wrapper(env=env, action_repeat=action_repeat, reward_scale=reward_scale, rm_done=rm_done)
              for _ in range(1)])
         policy.eval()
         collector = ts.data.Collector(policy, env, exploration_noise=False)
