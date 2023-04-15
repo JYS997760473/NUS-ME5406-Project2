@@ -14,13 +14,12 @@ pip install gymnasium
 pip install box2d pygame
 ```
 
-# Modification
+## Modification
 
 In ARC computer: for `pkg_resources`: comment `__init__.py` line 121 and line 2338
 to avoid the warning.
 
-
-# OpenAI Gym Spinning Up:
+## OpenAI Gym Spinning Up
 
 python version: python3.6
 
