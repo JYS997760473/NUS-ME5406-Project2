@@ -1,9 +1,13 @@
 import argparse
+import gym
 
 
-
-
-
+def main(args: argparse.Namespace):
+    """
+    
+    """
+    environment = 'BipedalWalkerHardcore-v3' if args.hardcore == True else 'BipedalWalker-v3'
+    env = gym.make(environment)
 
 
 
@@ -16,4 +20,6 @@ if __name__ == '__main__':
     parser.add_argument('--episode', type=int, default=500, help='number of episodes in this experiment')
     parser.add_argument('--render', type=bool, default=True, help='whether render the environment during training')
     args = parser.parse_args()
+
+    main(args=args)
     

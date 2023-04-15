@@ -38,3 +38,8 @@ git clone https://github.com/openai/spinningup.git
 cd spinningup
 pip install -e .
 ```
+
+## Install Bugs Fixed
+
+First cannot install box2d-py, then run `brew install swig`, install swig first
+then `pip install gym[box2d]` works.
