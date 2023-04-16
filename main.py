@@ -1,6 +1,6 @@
 import argparse
 import gym
-
+from src.sac import SAC
 
 def main(args: argparse.Namespace):
     """
@@ -8,6 +8,7 @@ def main(args: argparse.Namespace):
     """
     environment = 'BipedalWalkerHardcore-v3' if args.hardcore == True else 'BipedalWalker-v3'
     env = gym.make(environment)
+    SAC(env=env, num_episode=10)
 
 
 
