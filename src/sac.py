@@ -159,7 +159,7 @@ class SAC:
                 episode_steps += 1
                 # take action to next state
                 obs2, reward, terminated, truncated, info = self.env.step(action)
-                done = terminated or truncated or episode_steps > 1998
+                done = terminated or truncated or episode_steps > 2998
                 # refine the reward structure
                 if reward == -100:
                     reward = -1
@@ -176,10 +176,22 @@ class SAC:
                     for i in range(50):
                         batch = self.replay_buffer.sample_batch(self.batch_size)
                         self.update(data=batch)
+
             if episode_reward > 2800 and reward > 0:
                 self.success += 1
+            # save vars.pkl environment
             joblib.dump({'env': self.env}, osp.join(self.output_dir, 'vars.pkl'))
-            print(f"output dir:{osp.join(self.output_dir, 'vars.pkl')}")
+
+            # save model.pt
+            fpath = 'pyt_save'
+            fpath = osp.join(self.output_dir, fpath)
+            try:
+                os.mkdir(fpath)
+            except FileExistsError:
+                pass
+            fname = osp.join(fpath, 'model.pt')
+            torch.save(self.ac, fname)
+
             print(f"total steps: {total_steps}, episode:{episode}, steps:{episode_steps}, reward:{episode_reward},\
                 time: {time.time()-start_time}, success:{self.success}")
         # close environment
