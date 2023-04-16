@@ -9,9 +9,8 @@ def main(args: argparse.Namespace):
     environment = 'BipedalWalkerHardcore-v3' if args.hardcore == True else 'BipedalWalker-v3'
     env = gym.make(environment, render_mode='human')
     print(f"environmnet is "+environment)
-    SAC(env=env, num_episode=1500)
-
-
+    sac = SAC(env=env, exp_name='my_test', num_episode=1500)
+    sac.run()
 
 
 if __name__ == '__main__':
