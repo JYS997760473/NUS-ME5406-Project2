@@ -43,3 +43,9 @@ pip install -e .
 
 First cannot install box2d-py, then run `brew install swig`, install swig first, then run
 `sudo apt-get install swig build-essential python-dev python3-dev`, then `pip install gym[box2d]` works.
+
+## Result
+
+Final trained agent is shown in this gif:
+
+![Alt Text](./GIF/episode1.gif)
