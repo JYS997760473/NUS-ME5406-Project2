@@ -11,7 +11,7 @@ def main(args: argparse.Namespace):
     print(f"making environmnet "+environment)
     env = gym.make(environment, render_mode='human')
     # torch.set_num_threads(torch.get_num_threads())
-    sac = SAC(env=env, exp_name=args.exp_name, num_episode=args.episode)
+    sac = SAC(env=env, exp_name=args.exp_name, num_episode=args.episode, batch_size=args.batch_size)
     sac.run()
 
 
@@ -22,6 +22,7 @@ if __name__ == '__main__':
     parser.add_argument('--gamma', type=float, default=0.99, help='gamma in RL algorithm')
     parser.add_argument('--episode', type=int, default=500, help='number of episodes in this experiment')
     parser.add_argument('--render', type=bool, default=True, help='whether render the environment during training')
+    parser.add_argument('--batch_size', type=int, default=100, help='batch size in SAC algorithm')
     args = parser.parse_args()
 
     print(f"Hyperparameters:{args}")
