@@ -11,3 +11,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
     # plot reward
     plot_reward(exp_name=args.exp_name)
+
+    # plot success
+    plot_success(exp_name=args.exp_name)
+
+    # plot time
+    plot_time(exp_name=args.exp_name)
