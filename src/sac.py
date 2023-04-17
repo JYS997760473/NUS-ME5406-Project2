@@ -16,6 +16,9 @@ class SAC:
                  gamma=0.99, polyak=0.995, lr=1e-3, alpha=0.2, batch_size=100, num_episode=500) -> None:
         
         print(f"initializing SAC...")
+
+        torch.set_num_threads(torch.get_num_threads())
+        print(f"using {torch.get_num_threads()} threads for parallelizing CPU operations")
         self.env = env
         self.actor_critic = actor_critic
         self.seed = seed
@@ -156,6 +159,7 @@ class SAC:
             episode_steps = 0
             done = False
             start_time = time.time()
+            episode_success = False
             # one episode
             while not done:
                 if episode < 5:
@@ -183,7 +187,9 @@ class SAC:
                         batch = self.replay_buffer.sample_batch(self.batch_size)
                         self.update(data=batch)
 
-            if episode_reward > 2800 and reward > 0:
+            if terminated == True and truncated == False and reward > 0:
+                # reach the end, this episode is successful
+                episode_success = True
                 self.success += 1
             # save vars.pkl environment
             joblib.dump({'env': self.env}, osp.join(self.output_dir, 'vars.pkl'))
@@ -193,12 +199,14 @@ class SAC:
             torch.save(self.ac, fname)
 
             print(f"total steps: {total_steps}, episode:{episode}, steps:{episode_steps}, reward:{episode_reward},\
-                time: {time.time()-start_time}, success:{self.success}, truncated:{truncated}, terminated:{terminated}\
+                time: {time.time()-start_time}, episode success: {episode_success}, success:{self.success}, \
+                  truncated:{truncated}, terminated:{terminated}\
                   final step reward:{reward}, total time used:{time.time()-total_start_time}")
             
             # record log to json file
             one_episode_dict = {'episode':episode, 'steps':episode_steps, 'reward':episode_reward, 'time':\
-                                time.time()-start_time, 'success':self.success, 'truncated':truncated, 'terminated':\
+                                time.time()-start_time, 'success':episode_success, 'success_num':self.success, \
+                                    'truncated':truncated, 'terminated':\
                                 terminated, 'final_step_reward':reward, 'total_steps':total_steps, 'total_time':\
                                     time.time()-total_start_time}
             json_list.append(one_episode_dict)
