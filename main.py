@@ -7,9 +7,9 @@ def main(args: argparse.Namespace):
     
     """
     environment = 'BipedalWalkerHardcore-v3' if args.hardcore == True else 'BipedalWalker-v3'
+    print(f"making environmnet "+environment)
     env = gym.make(environment, render_mode='human')
-    print(f"environmnet is "+environment)
-    sac = SAC(env=env, exp_name='my_test', num_episode=1500)
+    sac = SAC(env=env, exp_name=args.exp_name, num_episode=args.episode)
     sac.run()
 
 
@@ -22,5 +22,5 @@ if __name__ == '__main__':
     parser.add_argument('--render', type=bool, default=True, help='whether render the environment during training')
     args = parser.parse_args()
 
-    main(args=args)
-    
+    print(f"Hyperparameters:{args}")
+    main(args=args) 
