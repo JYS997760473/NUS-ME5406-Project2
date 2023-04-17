@@ -1,5 +1,6 @@
 import argparse
 import gym
+import torch
 from src.sac import SAC
 
 def main(args: argparse.Namespace):
@@ -9,6 +10,7 @@ def main(args: argparse.Namespace):
     environment = 'BipedalWalkerHardcore-v3' if args.hardcore == True else 'BipedalWalker-v3'
     print(f"making environmnet "+environment)
     env = gym.make(environment, render_mode='human')
+    # torch.set_num_threads(torch.get_num_threads())
     sac = SAC(env=env, exp_name=args.exp_name, num_episode=args.episode)
     sac.run()
 
