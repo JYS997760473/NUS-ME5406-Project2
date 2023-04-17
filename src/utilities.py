@@ -67,13 +67,14 @@ def plot_reward(exp_name: str):
 
     # set seaborn style
     sns.set() 
-    plt.figure()
+    plt.figure(figsize=(20, 8))
     plt.plot(x, reward, label='Reward')
     plt.plot(x, average_reward, label='Average Reward')
     plt.legend()
     plt.title("Reward and Average Reward Collected During Training")
     plt.xlabel("Episode")
     plt.ylabel("Reward")
+    plt.savefig(os.path.join(os.getcwd(), "model", exp_name, "reward.png"))
     plt.show()
 
 def plot_success(exp_name: str):
@@ -109,22 +110,43 @@ def plot_success(exp_name: str):
     episode_num = len(data)
     x = np.arange(0, episode_num)
     success = np.zeros((episode_num))
+    every_success = success.copy()
     for i in range(episode_num):
         if "success_num" in data[i].keys():
             # new version json file
             success[i] = data[i]["success_num"]
+            if data[i]["success"] == True:
+                # current episode is successful
+                every_success[i] = 1
         else:
             # old version json file
             success[i] = data[i]["success"]
+            if data[i]["terminated"] == True and data[i]["truncated"] == False\
+                and data[i]["final_step_reward"] > 0:
+                every_success[i] = 1
 
     # set seaborn style
     sns.set() 
-    plt.figure()
+    plt.figure(figsize=(20, 8))
     plt.plot(x, success, label='Number of Successful Episodes')
     plt.legend()
     plt.title("Number of Successful Episodes During Training")
     plt.xlabel("Episode")
     plt.ylabel("Number of Successful Episodes")
+    plt.savefig(os.path.join(os.getcwd(), "model", exp_name, "success.png"))
+    plt.show()
+
+    plt.figure(figsize=(20, 8))
+    # sns.distplot(every_success, rug=True)
+    plt.bar(x=x, height=every_success, alpha=0.6, width = 0.8, 
+            facecolor = 'deeppink', edgecolor = 'deeppink', lw=1, 
+                label='Successful Episode')
+    plt.legend()
+    plt.savefig(os.path.join(os.getcwd(), "model", exp_name, 
+                                "successdistribute.png"))
+    plt.title("Distribution of Successful Episodes")
+    plt.xlabel("Episode")
+    plt.ylabel("Success")
     plt.show()
 
 def plot_time(exp_name: str):
@@ -171,15 +193,16 @@ def plot_time(exp_name: str):
 
     # set seaborn style
     sns.set() 
-    plt.figure()
+    plt.figure(figsize=(20, 8))
     plt.plot(x, total_time_np, label='Total Time Consumption')
     plt.legend()
     plt.title("Time Consumption During Training")
     plt.xlabel("Episode")
     plt.ylabel("Time (second)")
+    plt.savefig(os.path.join(os.getcwd(), "model", exp_name, "time.png"))
     plt.show()
 
-    plt.figure()
+    plt.figure(figsize=(20, 8))
     plt.bar(x=x, height=time_np, alpha=0.6, width = 0.8, 
             facecolor = 'darkblue', edgecolor = 'darkblue', lw=1, 
                 label='Time of Every Episode')
@@ -189,4 +212,5 @@ def plot_time(exp_name: str):
     plt.xlabel("Episode")
     plt.ylabel("Time (second)")
     plt.legend()
+    plt.savefig(os.path.join(os.getcwd(), "model", exp_name, "timebar.png"))
     plt.show()
