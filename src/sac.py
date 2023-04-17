@@ -8,12 +8,14 @@ import itertools
 from src.replaybuffer import ReplayBuffer
 import joblib
 import os.path as osp, os
+import json
     
 
 class SAC:
     def __init__(self, env, exp_name, actor_critic=mlp.MLPActorCritic, seed=0, replay_size=int(1e6),
                  gamma=0.99, polyak=0.995, lr=1e-3, alpha=0.2, batch_size=100, num_episode=500) -> None:
         
+        print(f"initializing SAC...")
         self.env = env
         self.actor_critic = actor_critic
         self.seed = seed
@@ -141,8 +143,11 @@ class SAC:
                       deterministic)
     
     def run(self):
+        print(f"running experiment...")
         # loop
+        json_list = []
         total_steps = 0
+        total_start_time = time.time()
         for episode in range(self.num_episode):
             # one episode
             obs, info = self.env.reset()
@@ -151,15 +156,16 @@ class SAC:
             episode_steps = 0
             done = False
             start_time = time.time()
+            # one episode
             while not done:
-                if episode < 2:
+                if episode < 5:
                     action = self.env.action_space.sample()
                 else:
                     action = self.get_action(obs)
                 episode_steps += 1
                 # take action to next state
                 obs2, reward, terminated, truncated, info = self.env.step(action)
-                done = terminated or truncated or episode_steps > 2998
+                done = terminated or truncated or episode_steps > 5000
                 # refine the reward structure
                 if reward == -100:
                     reward = -1
@@ -183,17 +189,27 @@ class SAC:
             joblib.dump({'env': self.env}, osp.join(self.output_dir, 'vars.pkl'))
 
             # save model.pt
-            fpath = 'pyt_save'
-            fpath = osp.join(self.output_dir, fpath)
-            try:
-                os.mkdir(fpath)
-            except FileExistsError:
-                pass
-            fname = osp.join(fpath, 'model.pt')
+            fname = osp.join(self.output_dir, 'model.pt')
             torch.save(self.ac, fname)
 
             print(f"total steps: {total_steps}, episode:{episode}, steps:{episode_steps}, reward:{episode_reward},\
-                time: {time.time()-start_time}, success:{self.success}")
+                time: {time.time()-start_time}, success:{self.success}, truncated:{truncated}, terminated:{terminated}\
+                  final step reward:{reward}, total time used:{time.time()-total_start_time}")
+            
+            # record log to json file
+            one_episode_dict = {'episode':episode, 'steps':episode_steps, 'reward':episode_reward, 'time':\
+                                time.time()-start_time, 'success':self.success, 'truncated':truncated, 'terminated':\
+                                terminated, 'final_step_reward':reward, 'total_steps':total_steps, 'total_time':\
+                                    time.time()-total_start_time}
+            json_list.append(one_episode_dict)
+
+        # end all episodes, record output
+        json_dict = {'episodes': json_list}
+        json_file = osp.join(self.output_dir, 'output.json')
+        file = open(json_file, 'w')
+        json.dump(json_dict, file, indent=4)
+        file.close()
+            
         # close environment
         print(f"close environment")
         self.env.close()

@@ -1,0 +1,16 @@
+{
+    "episodes": [
+        {
+            "episode": 0,
+            "steps": 216,
+            "reward": -232.6339056617825,
+            "time": 2.2501096725463867,
+            "success": 0,
+            "truncated": false,
+            "terminated": true,
+            "final_step_reward": -10,
+            "total_steps": 108,
+            "total_time": 2.645752429962158
+        }
+    ]
+}
