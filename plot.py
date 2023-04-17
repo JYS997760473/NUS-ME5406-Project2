@@ -17,3 +17,6 @@ if __name__ == '__main__':
 
     # plot time
     plot_time(exp_name=args.exp_name)
+
+    # plot steps
+    plot_steps(exp_name=args.exp_name)
