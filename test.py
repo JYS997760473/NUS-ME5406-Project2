@@ -4,6 +4,7 @@ import argparse
 import joblib
 import json
 import time
+from src.utilities import plot_test
 
 def load_model(exp_name: str, deterministic=False):
     """ 
@@ -77,3 +78,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     action, env = load_model(exp_name=args.exp_name)
     run(exp_name=args.exp_name, env=env, action=action, episodes=args.episode)
+    plot_test(exp_name=args.exp_name)

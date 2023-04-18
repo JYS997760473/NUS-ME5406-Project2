@@ -12,8 +12,9 @@ import json
     
 
 class SAC:
-    def __init__(self, env, exp_name, actor_critic=mlp.MLPActorCritic, seed=0, replay_size=int(1e6),
-                 gamma=0.99, polyak=0.995, lr=1e-3, alpha=0.2, batch_size=100, num_episode=500) -> None:
+    def __init__(self, env, exp_name, actor_critic=mlp.MLPActorCritic, seed=0, 
+                 replay_size=int(1e6), gamma=0.99, polyak=0.995, lr=1e-3, 
+                 alpha=0.2, batch_size=100, num_episode=500) -> None:
         
         print(f"initializing SAC...")
 
@@ -53,10 +54,12 @@ class SAC:
             p.requires_grad = False
 
         # List of parameters for both Q-networks (save this for convenience)
-        self.q_params = itertools.chain(self.ac.q1.parameters(), self.ac.q2.parameters())
+        self.q_params = itertools.chain(self.ac.q1.parameters(), 
+                                        self.ac.q2.parameters())
 
         # Experience buffer
-        self.replay_buffer = ReplayBuffer(obs_dim=self.obs_dim, act_dim=self.act_dim, size=self.replay_size)
+        self.replay_buffer = ReplayBuffer(obs_dim=self.obs_dim, act_dim=
+                                          self.act_dim, size=self.replay_size)
 
         # Set up optimizers for policy and q-function
         self.pi_optimizer = Adam(self.ac.pi.parameters(), lr=self.lr)
