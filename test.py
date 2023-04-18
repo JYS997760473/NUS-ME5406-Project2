@@ -31,7 +31,7 @@ def load_model(exp_name: str, deterministic=False):
 
     return action, env
 
-def run(exp_name: str, env, action, episodes: int):
+def run(exp_name: str, env, action, episodes: int, seed: int=0):
     """
     run the pre-trained model in the environment
     test.json file will be created 
@@ -40,7 +40,7 @@ def run(exp_name: str, env, action, episodes: int):
     start_time = time.time()
     total_success = 0
     for i in range(episodes):
-        obs, info = env.reset()
+        obs, info = env.reset(seed = seed)
         done = False
         episode_reward = 0
         success = False
