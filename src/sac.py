@@ -44,9 +44,6 @@ class SAC:
         self.obs_dim = self.env.observation_space.shape
         self.act_dim = self.env.action_space.shape[0]
 
-        # Action limit for clamping: critically, assumes all dimensions share the same bound!
-        # act_limit = env.action_space.high[0]
-
         # Create actor-critic module and target networks
         self.ac = self.actor_critic(env.observation_space, env.action_space)
         self.ac_targ = deepcopy(self.ac)
