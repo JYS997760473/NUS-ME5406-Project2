@@ -79,7 +79,10 @@ if __name__ == '__main__':
                             help='name of current experiment')
     parser.add_argument('--episode', type=int, default=10, 
                         help='number of episodes want to test')
+    parser.add_argument('--seed', type=int, default=0, 
+                        help='environment seed')
     args = parser.parse_args()
     action, env = load_model(exp_name=args.exp_name)
-    run(exp_name=args.exp_name, env=env, action=action, episodes=args.episode)
+    run(exp_name=args.exp_name, env=env, action=action, episodes=args.episode, 
+        seed=args.seed)
     plot_test(exp_name=args.exp_name)
