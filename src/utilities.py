@@ -274,12 +274,13 @@ def plot_test(exp_name: str):
     """
     plot test results
     """
+    AVERAGE_STOP = 5
     def get_data(exp_name: str) -> dict:
         """
         find json file and load the data
         """
         exp_dir = os.path.join(os.getcwd(), "model", exp_name)
-        file_name = os.path.join(exp_dir, "output.json")
+        file_name = os.path.join(exp_dir, "test_output.json")
 
         # first check whether the experiment name is valid and the output.json 
         # file exits
@@ -358,6 +359,21 @@ def plot_test(exp_name: str):
     plt.title("Distribution of Successful Episodes in Testing")
     plt.xlabel("Episode")
     plt.ylabel("Success")
+    plt.show()
+
+    plt.figure(figsize=FIGURE_SIZE)
+    suc = ["Success", "Fail"]
+    succ = [data[-1]["total_success"], episode_num-data[-1]["total_success"]]
+    # sns.distplot(every_success, rug=True)
+    plt.bar(x=suc, height=succ, alpha=0.6, width = 0.8, 
+            facecolor = 'deeppink', edgecolor = 'deeppink', lw=1, 
+                label='Successful Episode')
+    plt.legend()
+    plt.savefig(os.path.join(os.getcwd(), "model", exp_name, 
+                                "test_successnum.png"))
+    plt.title("Number of Successful and Failure Episodes During Testing")
+    plt.xlabel("Number of Episode")
+    # plt.ylabel("Success")
     plt.show()
 
     # reward
