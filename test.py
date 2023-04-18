@@ -38,6 +38,7 @@ def run(exp_name: str, env, action, episodes: int):
     """
     json_list = []
     start_time = time.time()
+    total_success = 0
     for i in range(episodes):
         obs, info = env.reset()
         done = False
@@ -54,9 +55,12 @@ def run(exp_name: str, env, action, episodes: int):
             done = terminated or truncated
             episode_reward += reward
             steps += 1
-        success = terminated == True and truncated == False and reward > 0
+        if terminated == True and truncated == False and reward > 0:
+            success = True
+            total_success += 1
         print(f"episode:{i}, total reward:{episode_reward}, success:{success}")
-        one_episode_dict = {'episode':i, 'steps': steps, 'success': success,
+        one_episode_dict = {'episode':i, 'steps': steps, 'success': success, 
+                            'total_success': total_success,
                             'reward': episode_reward, 'time': time.time()-
                             start_time}
         json_list.append(one_episode_dict)
