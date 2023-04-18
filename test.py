@@ -2,6 +2,9 @@ import torch
 import os
 import argparse
 import joblib
+import json
+import time
+from src.utilities import plot_test
 
 def load_model(exp_name: str, deterministic=False):
     """ 
@@ -28,16 +31,20 @@ def load_model(exp_name: str, deterministic=False):
 
     return action, env
 
-def run(env, action, episodes: int):
+def run(exp_name: str, env, action, episodes: int):
     """
     run the pre-trained model in the environment
+    test.json file will be created 
     """
-
+    json_list = []
+    start_time = time.time()
+    total_success = 0
     for i in range(episodes):
         obs, info = env.reset()
         done = False
         episode_reward = 0
         success = False
+        steps = 0
         while done == False:
             env.render()
             act = action(obs)
@@ -47,8 +54,23 @@ def run(env, action, episodes: int):
             reward = reward * 10
             done = terminated or truncated
             episode_reward += reward
-        success = terminated == True and truncated == False and reward > 0
+            steps += 1
+        if terminated == True and truncated == False and reward > 0:
+            success = True
+            total_success += 1
         print(f"episode:{i}, total reward:{episode_reward}, success:{success}")
+        one_episode_dict = {'episode':i, 'steps': steps, 'success': success, 
+                            'total_success': total_success,
+                            'reward': episode_reward, 'time': time.time()-
+                            start_time}
+        json_list.append(one_episode_dict)
+    # end all episodes, record output
+    exp_dir = os.path.join(os.getcwd(), "model", exp_name)
+    json_dict = {'episodes': json_list}
+    json_file = os.path.join(exp_dir, 'test_output.json')
+    file = open(json_file, 'w')
+    json.dump(json_dict, file, indent=4)
+    file.close()
 
 
 if __name__ == '__main__':
@@ -59,4 +81,5 @@ if __name__ == '__main__':
                         help='number of episodes want to test')
     args = parser.parse_args()
     action, env = load_model(exp_name=args.exp_name)
-    run(env=env, action=action, episodes=args.episode)
+    run(exp_name=args.exp_name, env=env, action=action, episodes=args.episode)
+    plot_test(exp_name=args.exp_name)

@@ -269,3 +269,120 @@ def plot_steps(exp_name: str):
     plt.legend()
     plt.savefig(os.path.join(os.getcwd(), "model", exp_name, "steps.png"))
     plt.show()
+
+def plot_test(exp_name: str):
+    """
+    plot test results
+    """
+    AVERAGE_STOP = 5
+    def get_data(exp_name: str) -> dict:
+        """
+        find json file and load the data
+        """
+        exp_dir = os.path.join(os.getcwd(), "model", exp_name)
+        file_name = os.path.join(exp_dir, "test_output.json")
+
+        # first check whether the experiment name is valid and the output.json 
+        # file exits
+        if os.path.exists(file_name):
+            # print(f"loading {file_name} ...")
+            pass
+        else :
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), 
+                                    file_name)
+        
+        # load the output.json file
+        json_file = open(file_name, 'r')
+        data = json.loads(json_file.read())
+
+        return data
+
+    # load json file and get dict data
+    data = get_data(exp_name=exp_name)["episodes"]
+
+    # collect data
+    episode_num = len(data)
+    x = np.arange(0, episode_num)
+    steps = np.zeros((episode_num))
+    average_steps = steps.copy()
+    success = steps.copy()
+    reward = steps.copy()
+    average_reward = steps.copy()
+    time = steps.copy()
+
+    sns.set() 
+    # update data
+    for i in range(episode_num):
+        current_steps = data[i]["steps"]
+        steps[i] = current_steps
+        if data[i]['success'] == True:
+            success[i] = 1
+        reward[i] = data[i]['reward']
+        time[i] = data[i]['time']
+        if i >= AVERAGE_STOP - 1:
+            average_steps[i] = np.mean(steps[i - AVERAGE_STOP + 1: i])
+            average_reward[i] = np.mean(reward[i - AVERAGE_STOP + 1: i])
+    
+    # steps
+    plt.figure(figsize=FIGURE_SIZE)
+    plt.bar(x=x, height=steps, alpha=0.6, width = 0.8, 
+            facecolor = 'orangered', edgecolor = 'orangered', lw=1, 
+                label='Steps of Every Episode')
+    plt.plot(x, average_steps, color="blueviolet", label=
+                "Average Steps of Every Episode")
+    plt.title("Number of Steps of Every Episode During Testing")
+    plt.xlabel("Episode")
+    plt.ylabel("Number of Steps")
+    plt.legend()
+    plt.savefig(os.path.join(os.getcwd(), "model", exp_name, "test_steps.png"))
+    plt.show()
+
+    # time
+    plt.figure(figsize=FIGURE_SIZE)
+    plt.plot(x, time, label='Total Time Consumption')
+    plt.legend()
+    plt.title("Time Consumption During Testing")
+    plt.xlabel("Episode")
+    plt.ylabel("Time (second)")
+    plt.savefig(os.path.join(os.getcwd(), "model", exp_name, "test_time.png"))
+    plt.show()
+
+    # success
+    plt.figure(figsize=FIGURE_SIZE)
+    # sns.distplot(every_success, rug=True)
+    plt.bar(x=x, height=success, alpha=0.6, width = 0.8, 
+            facecolor = 'deeppink', edgecolor = 'deeppink', lw=1, 
+                label='Successful Episode')
+    plt.legend()
+    plt.savefig(os.path.join(os.getcwd(), "model", exp_name, 
+                                "test_successdistribute.png"))
+    plt.title("Distribution of Successful Episodes in Testing")
+    plt.xlabel("Episode")
+    plt.ylabel("Success")
+    plt.show()
+
+    plt.figure(figsize=FIGURE_SIZE)
+    suc = ["Success", "Fail"]
+    succ = [data[-1]["total_success"], episode_num-data[-1]["total_success"]]
+    # sns.distplot(every_success, rug=True)
+    plt.bar(x=suc, height=succ, alpha=0.6, width = 0.8, 
+            facecolor = 'deeppink', edgecolor = 'deeppink', lw=1, 
+                label='Successful Episode')
+    plt.legend()
+    plt.savefig(os.path.join(os.getcwd(), "model", exp_name, 
+                                "test_successnum.png"))
+    plt.title("Number of Successful and Failure Episodes During Testing")
+    plt.xlabel("Number of Episode")
+    # plt.ylabel("Success")
+    plt.show()
+
+    # reward
+    plt.figure(figsize=FIGURE_SIZE)
+    plt.plot(x, reward, label='Reward')
+    plt.plot(x, average_reward, label='Average Reward')
+    plt.legend()
+    plt.title("Reward and Average Reward Collected During Testing")
+    plt.xlabel("Episode")
+    plt.ylabel("Reward")
+    plt.savefig(os.path.join(os.getcwd(), "model", exp_name, "test_reward.png"))
+    plt.show()
