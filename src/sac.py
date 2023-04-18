@@ -153,7 +153,7 @@ class SAC:
         total_start_time = time.time()
         for episode in range(self.num_episode):
             # one episode
-            obs, info = self.env.reset()
+            obs, info = self.env.reset(seed=self.seed)
             self.env.render()
             episode_reward = 0
             episode_steps = 0
