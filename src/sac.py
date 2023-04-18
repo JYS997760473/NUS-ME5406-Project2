@@ -165,7 +165,8 @@ class SAC:
                     action = self.get_action(obs)
                 episode_steps += 1
                 # take action to next state
-                obs2, reward, terminated, truncated, info = self.env.step(action)
+                obs2, reward, terminated, truncated, info = \
+                            self.env.step(action)
                 done = terminated or truncated or episode_steps > 5000
                 # refine the reward structure
                 if reward == -100:
@@ -175,7 +176,8 @@ class SAC:
                 episode_steps += 1
                 total_steps += 1
                 # Store experience to replay buffer
-                self.replay_buffer.store(obs=obs, act=action, rew=reward, next_obs=obs2, done=done)
+                self.replay_buffer.store(obs=obs, act=action, rew=reward, 
+                                         next_obs=obs2, done=done)
                 # replay_buffer.store(obs, action, reward, obs2, done)
                 obs = obs2
                 # update
@@ -195,16 +197,22 @@ class SAC:
             fname = osp.join(self.output_dir, 'model.pt')
             torch.save(self.ac, fname)
 
-            print(f"total steps: {total_steps}, episode:{episode}, steps:{episode_steps}, reward:{episode_reward},\
-                time: {time.time()-start_time}, episode success: {episode_success}, success:{self.success}, \
+            print(f"total steps: {total_steps}, episode:{episode}, steps:\
+                  {episode_steps}, reward:{episode_reward},\
+                time: {time.time()-start_time}, episode success: {episode_success}, \
+                  success:{self.success}, \
                   truncated:{truncated}, terminated:{terminated}\
-                  final step reward:{reward}, total time used:{time.time()-total_start_time}")
+                  final step reward:{reward}, total time used:\
+                    {time.time()-total_start_time}")
             
             # record log to json file
-            one_episode_dict = {'episode':episode, 'steps':episode_steps, 'reward':episode_reward, 'time':\
-                                time.time()-start_time, 'success':episode_success, 'success_num':self.success, \
+            one_episode_dict = {'episode':episode, 'steps':episode_steps, 
+                                'reward':episode_reward, 'time':\
+                                time.time()-start_time, 'success':episode_success, 
+                                'success_num':self.success, \
                                     'truncated':truncated, 'terminated':\
-                                terminated, 'final_step_reward':reward, 'total_steps':total_steps, 'total_time':\
+                                terminated, 'final_step_reward':reward, 
+                                'total_steps':total_steps, 'total_time':\
                                     time.time()-total_start_time}
             json_list.append(one_episode_dict)
 

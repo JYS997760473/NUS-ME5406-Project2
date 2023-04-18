@@ -269,3 +269,9 @@ def plot_steps(exp_name: str):
     plt.legend()
     plt.savefig(os.path.join(os.getcwd(), "model", exp_name, "steps.png"))
     plt.show()
+
+def plot_test(exp_name: str, num_episodes: int):
+    """
+    plot test results
+    """
+    
