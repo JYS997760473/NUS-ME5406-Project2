@@ -31,7 +31,8 @@ def load_model(exp_name: str, deterministic=False):
 
     return action, env
 
-def run(exp_name: str, env, action, episodes: int, seed: int=0):
+def run(exp_name: str, env, action, episodes: int, seed: int=-1, render: bool=
+        True):
     """
     run the pre-trained model in the environment
     test.json file will be created 
@@ -40,13 +41,17 @@ def run(exp_name: str, env, action, episodes: int, seed: int=0):
     start_time = time.time()
     total_success = 0
     for i in range(episodes):
-        obs, info = env.reset(seed = seed)
+        if seed == -1:
+            obs, info = env.reset()
+        else:
+            obs, info = env.reset(seed = seed)
         done = False
         episode_reward = 0
         success = False
         steps = 0
         while done == False:
-            env.render()
+            if render == True:
+                env.render()
             act = action(obs)
             obs, reward, terminated, truncated, info = env.step(act)
             if reward == -100:
@@ -79,10 +84,12 @@ if __name__ == '__main__':
                             help='name of current experiment')
     parser.add_argument('--episode', type=int, default=10, 
                         help='number of episodes want to test')
-    parser.add_argument('--seed', type=int, default=0, 
+    parser.add_argument('--seed', type=int, default=-1, 
                         help='environment seed')
+    parser.add_argument('--render', type=bool, default=True, 
+                        help='whether render the environment in testing')
     args = parser.parse_args()
     action, env = load_model(exp_name=args.exp_name)
     run(exp_name=args.exp_name, env=env, action=action, episodes=args.episode, 
-        seed=args.seed)
+        seed=args.seed, render=args.render)
     plot_test(exp_name=args.exp_name)
