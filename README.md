@@ -18,9 +18,9 @@ First install the requirements of this project by `pip`
 pip install -r requirements.txt
 ```
 
-### Install Bugs Fixed
+### Potential Bugs Fix during installing
 
-If your PC cannot install box2d-py, please try to run `brew install swig`, install swig first, then run
+If your PC cannot install `box2d-py`, please try to run `brew install swig`, install swig first, then run
 `sudo apt-get install swig build-essential python-dev python3-dev`, then `pip install gym[box2d]` normally will work.
 
 ## Run this project
@@ -63,8 +63,16 @@ There are already several pre-trained models under the `./model` directory. Run 
 python test.py --exp_name <model name chosen> --episode <number of episodes want to test>
 ```
 
+For example, run:
+
+```bash
+python test.py --exp_name my_experiment --episode 100 
+```
+
 ## Demo
 
 Final trained agent is shown in this gif:
 
 ![Alt Text](./GIF/episode1.gif)
+
+## Experiment Results Example
