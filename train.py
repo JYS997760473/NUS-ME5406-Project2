@@ -12,7 +12,7 @@ def train(args: argparse.Namespace):
     env = gym.make(environment, render_mode='human')
     # torch.set_num_threads(torch.get_num_threads())
     sac = SAC(env=env, exp_name=args.exp_name, num_episode=args.episode, 
-              batch_size=args.batch_size, seed=args.seed)
+              batch_size=args.batch_size, seed=args.seed, render=args.render)
     sac.run()
 
 
@@ -28,7 +28,7 @@ if __name__ == '__main__':
                         help='whether render the environment during training')
     parser.add_argument('--batch_size', type=int, default=100, 
                         help='batch size in FIFO buffer replay experience')
-    parser.add_argument('--seed', type=int, default=0, 
+    parser.add_argument('--seed', type=int, default=-1, 
                         help='environment seed')
     args = parser.parse_args()
 

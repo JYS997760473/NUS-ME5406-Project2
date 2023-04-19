@@ -12,9 +12,9 @@ import json
     
 
 class SAC:
-    def __init__(self, env, exp_name, actor_critic=mlp.MLPActorCritic, seed=0, 
+    def __init__(self, env, exp_name, actor_critic=mlp.MLPActorCritic, seed=-1, 
                  replay_size=int(1e6), gamma=0.99, polyak=0.995, lr=1e-3, 
-                 alpha=0.2, batch_size=100, num_episode=500) -> None:
+                 alpha=0.2, batch_size=100, num_episode=500, render=True) -> None:
         
         print(f"initializing SAC...")
 
@@ -31,6 +31,7 @@ class SAC:
         self.batch_size = batch_size
         self.num_episode = num_episode
         self.output_dir = "./model/"+exp_name+"/"
+        self.render = render
         try:
             os.mkdir(self.output_dir)
         except FileExistsError:
@@ -153,8 +154,14 @@ class SAC:
         total_start_time = time.time()
         for episode in range(self.num_episode):
             # one episode
-            obs, info = self.env.reset(seed=self.seed)
-            self.env.render()
+            if self.seed == -1:
+                # random environment
+                obs, info = self.env.reset()
+            else:
+                # deterministic environment
+                obs, info = self.env.reset(seed=self.seed)
+            if self.render == True:
+                self.env.render()
             episode_reward = 0
             episode_steps = 0
             done = False
