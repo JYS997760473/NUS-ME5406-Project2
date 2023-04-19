@@ -76,3 +76,9 @@ Final trained agent is shown in this gif:
 ![Alt Text](./GIF/episode1.gif)
 
 ## Experiment Results Example
+
+### batch size = 256
+
+![alt-text-1](./model/arc4.17.22:292000/reward.png "title-1") ![alt-text-2](./model/arc4.17.22:292000/success.png "title-2")
+
+### batch size = 100
