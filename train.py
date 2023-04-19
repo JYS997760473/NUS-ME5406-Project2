@@ -27,7 +27,7 @@ if __name__ == '__main__':
     parser.add_argument('--render', type=bool, default=True, 
                         help='whether render the environment during training')
     parser.add_argument('--batch_size', type=int, default=100, 
-                        help='batch size in SAC algorithm')
+                        help='batch size in FIFO buffer replay experience')
     parser.add_argument('--seed', type=int, default=0, 
                         help='environment seed')
     args = parser.parse_args()
