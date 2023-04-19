@@ -77,10 +77,9 @@ Final trained agent is shown in this gif:
 
 ## Training Experiment Results Example
 
-### batch size = 256
+### batch size = 100
 
 Reward:
-
 ![alt-text-1](./model/arc4.17.22:292000/reward.png)
 
 Number of total successful episode:
@@ -92,6 +91,18 @@ Distribution of successful episode during training
 Time consumption of each episode during training
 ![alt-text-4](./model/arc4.17.22:292000/timebar.png)
 
-### batch size = 100
+### batch size = 256
+
+Reward:
+![alt-text-5](./model/)
+
+Number of total successful episode:
+![alt-text-6](./model/arc4.17.22:292000/success.png)
+
+Distribution of successful episode during training
+![alt-text-7](./model/arc4.17.22:292000/successdistribute.png)
+
+Time consumption of each episode during training
+![alt-text-8](./model/arc4.17.22:292000/timebar.png)
 
 ## Testing Experiment Results Example
