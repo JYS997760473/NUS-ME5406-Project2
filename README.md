@@ -4,45 +4,24 @@ NUS ME5406 Deep Learning for Robotics Project 2
 
 ## Install
 
-This project is based on OpenAI gym
+This project is based on OpenAI Gym
 
-First install gym environment:
+This project is built on Python3.8.
 
-```bash
-pip install gymnasium
+It has been tested on MacOS 13.0, Ubuntu 18.04 and Ubuntu 20.04.
 
-pip install box2d pygame
-```
+Note: if you run it on MacOS 13.0, please do not render the environment, because MacOS 13.0 now does not support `OpenGL`
 
-## Modification
-
-In ARC computer: for `pkg_resources`: comment `__init__.py` line 121 and line 2338
-to avoid the warning.
-
-## OpenAI Gym Spinning Up
-
-python version: python3.6
-
-Operation System: Ubuntu 18 and Ubuntu 20
-
-## Install OpenMPI
+First install the requirements of this project by `pip`
 
 ```bash
-sudo apt-get update && sudo apt-get install libopenmpi-dev
+pip install -r requirements.txt
 ```
 
-## Install Spinning Up
+### Install Bugs Fixed
 
-```bash
-git clone https://github.com/openai/spinningup.git
-cd spinningup
-pip install -e .
-```
-
-## Install Bugs Fixed
-
-First cannot install box2d-py, then run `brew install swig`, install swig first, then run
-`sudo apt-get install swig build-essential python-dev python3-dev`, then `pip install gym[box2d]` works.
+If your PC cannot install box2d-py, please try to run `brew install swig`, install swig first, then run
+`sudo apt-get install swig build-essential python-dev python3-dev`, then `pip install gym[box2d]` normally will work.
 
 ## Result
 
