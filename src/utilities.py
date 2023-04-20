@@ -365,9 +365,12 @@ def plot_test(exp_name: str):
     suc = ["Success", "Fail"]
     succ = [data[-1]["total_success"], episode_num-data[-1]["total_success"]]
     # sns.distplot(every_success, rug=True)
-    plt.bar(x=suc, height=succ, alpha=0.6, width = 0.8, 
-            facecolor = 'deeppink', edgecolor = 'deeppink', lw=1, 
+    plt.bar(x=suc[0], height=succ[0], alpha=0.6, width = 0.8, 
+            facecolor = 'maroon', edgecolor = 'maroon', lw=1, 
                 label='Successful Episode')
+    plt.bar(x=suc[1], height=succ[1], alpha=0.6, width = 0.8, 
+            facecolor = 'green', edgecolor = 'blue', lw=1, 
+                label='Failed Episode')
     plt.legend()
     plt.savefig(os.path.join(os.getcwd(), "model", exp_name, 
                                 "test_successnum.png"))
