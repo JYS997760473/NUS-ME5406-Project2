@@ -1,6 +1,6 @@
 # NUS-ME5406-Project2 Bipedal Walker on Complex Terrain
 
-NUS ME5406 Deep Learning for Robotics Project 2
+Bipedal Walker on Complex Terrain using SAC algorithm
 
 > Author: Jia Yansong (A0263119H)
 
