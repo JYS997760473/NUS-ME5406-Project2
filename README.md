@@ -2,7 +2,7 @@
 
 NUS ME5406 Deep Learning for Robotics Project 2
 
-This project is based on OpenAI Gym
+> Author: Jia Yansong
 
 ## Install
 
