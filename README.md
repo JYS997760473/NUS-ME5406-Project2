@@ -2,7 +2,7 @@
 
 NUS ME5406 Deep Learning for Robotics Project 2
 
-> Author: Jia Yansong
+> Author: Jia Yansong (A0263119H)
 
 ## Install
 
